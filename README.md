@@ -1,4 +1,4 @@
-# Cycle 2 --5 - Simulation of -bus-topology-Network -NS2
+# Cycle 2 --4 - Simulation of -bus-topology-Network -NS2
 # Bus Topology Simulation in NS2
 
 ## AIM
@@ -31,47 +31,60 @@ and dropping queue mechanism.
 file.
 * STEP 16: At the particular time call the finish procedure. 
 * STEP 17: Stop the program.
+Program:
+# Create simulator
+set ns [new Simulator]
 
-#Create a simulator object 
-set ns [new Simulator] 
-#Open the nam trace file 
-set nf [open out.nam w] 
-$ns namtrace-all $nf 
-#Define a 'finish' procedure 
-proc finish {} 
-{ 
-global ns nf 
-$ns flush-trace 
-close $nf 
-#Execute nam on the trace file 
-exec nam out.nam & 
-exit 0 
-} 
-#Create five nodes 
-set n0 [$ns node] 
-set n1 [$ns node] 
-set n2 [$ns node] 
-set n3 [$ns node] 
-set n4 [$ns node] 
-#Create Lan between the nodes 
-set lan0 [$ns newLan "$n0 $n1 $n2 $n3 $n4" 0.5Mb 40ms LL Queue/DropTail MAC/Csma/Cd Channel] 
-#Create a TCP agent and attach it to node n0 
-set tcp0 [new Agent/TCP] 
-$tcp0 set class_ 1 
-$ns attach-agent $n1 $tcp0 
-#Create a TCP Sink agent (a traffic sink) for TCP and attach it to node n3  
-set  sink0 [new Agent/TCPSink] 
-$ns attach-agent $n3 $sink0 
-#Connect the traffic sources with the traffic sink 
-$ns connect $tcp0 $sink0 
-# Create a CBR traffic source and attach it to tcp0 
-set  cbr0 [new Application/Traffic/CBR] 
-$cbr0 set packetSize_ 500 
-$cbr0 set interval_ 0.01 
-$cbr0 attach-agent $tcp0 
-#Schedule events for the CBR agents 
-$ns at 0.5 "$cbr0 start" 
-$ns at 4.5 "$cbr0 stop" 
-#Call the finish procedure after 5 seconds of simulation time 
-$ns at 5.0 "finish" 
+# NAM trace
+set nf [open out.nam w]
+$ns namtrace-all $nf
+
+# Finish procedure
+proc finish {} {
+    global ns nf
+    $ns flush-trace
+    close $nf
+    exec nam out.nam &
+    exit 0
+}
+
+# Create nodes
+set n0 [$ns node]
+set n1 [$ns node]
+set n2 [$ns node]
+set n3 [$ns node]
+set n4 [$ns node]
+
+# Create LAN
+set lan0 [$ns newLan "$n0 $n1 $n2 $n3 $n4" 0.5Mb 40ms \
+          LL Queue/DropTail MAC/Csma/Cd Channel]
+
+# TCP Agent
+set tcp0 [new Agent/TCP]
+$ns attach-agent $n1 $tcp0
+
+# TCP Sink
+set sink0 [new Agent/TCPSink]
+$ns attach-agent $n3 $sink0
+
+# Connect TCP -> Sink
+$ns connect $tcp0 $sink0
+
+# CBR Application
+set cbr0 [new Application/Traffic/CBR]
+$cbr0 set packetSize_ 500
+$cbr0 set interval_ 0.01
+$cbr0 attach-agent $tcp0
+
+# Schedule
+$ns at 0.5 "$cbr0 start"
+$ns at 4.5 "$cbr0 stop"
+$ns at 5.0 "finish"
+
 $ns run
+
+![WhatsApp Image 2025-10-23 at 20 52 44_1a5dc9a8](https://github.com/user-attachments/assets/f77f4b31-4e85-4ffd-8b59-3b761178c8e7)
+
+## Result:
+ Hence to create and monitor a Bus Topology and effective data transmission using NS2 Software is verified.
+
