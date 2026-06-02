@@ -77,6 +77,7 @@ $ns at 4.5 "$cbr0 stop"
 $ns at 5.0 "finish" 
 $ns run
 ```
+
 ## OUTPUT
 <img width="1446" height="916" alt="image" src="https://github.com/user-attachments/assets/cd809504-3730-4bf7-a6c0-584498c30cdb" />
 ## RESULT
